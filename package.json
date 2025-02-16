@@ -4,12 +4,15 @@
   "description": "A CLI tool to watch and generate directory tree structure",
   "type": "module",
   "bin": {
-    "tree-watch": "dist/cli.js"
+    "tree-watch-cli": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
-    "start": "node --import tsx ./src/cli.ts",
-    "prepublishOnly": "npm run build"
+    "start": "tsx ./src/cli.ts",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"No tests specified\" && exit 0",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "files": [
     "dist",
@@ -37,5 +40,21 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rdrel/tree-watch-cli.git"
+  },
+  "engines": {
+    "node": ">=23.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js"
+    }
+  },
+  "homepage": "https://github.com/rdrel/tree-watch-cli#readme",
+  "bugs": {
+    "url": "https://github.com/rdrel/tree-watch-cli/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

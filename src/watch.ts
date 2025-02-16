@@ -1,123 +1,100 @@
 import { FSWatcher, watch } from 'chokidar';
 import { exec } from 'child_process';
 import path from 'path';
-import fs from 'fs';
-
-interface TreeWatcherOptions {
-  outputFile: string;
-  excludedFolders: string[];
-  maxDepth?: number;
-}
+import { TreeWatcherOptions } from './types.ts';
+import { generateTree } from './tree.ts';
 
 export class TreeWatcher {
-  private watcher: FSWatcher;
+  private watcher: FSWatcher | null = null;
   private options: TreeWatcherOptions;
   private updateTimeout: NodeJS.Timeout | null = null;
+  private isShuttingDown = false;
 
   constructor(options: TreeWatcherOptions) {
     this.options = options;
-
-    // Initialize watcher with provided options
-    this.watcher = watch('.', {
-      ignored: [
-        '**/node_modules/*/*/**',    // Ignore anything deeper than top-level packages
-        '**/.git/*/**',              // Ignore .git contents beyond first level
-        ...options.excludedFolders
-          .filter(folder => !['node_modules', '.git'].includes(folder))
-          .map(folder => `**/${folder}/**`),
-        options.outputFile, // Ignore the output file
-      ],
-      persistent: true,
-      ignoreInitial: true,  // Don't trigger events during initial scan
-      depth: options.maxDepth ?? 99,
-      ignorePermissionErrors: true,
-    });
-
-    // Do an initial scan of just the top level of node_modules
-    this.scanNodeModulesTopLevel();
-    this.setupWatchers();
+    this.setupWatcher();
+    this.setupCleanup();
   }
 
-  private scanNodeModulesTopLevel() {
-    const nodeModulesPath = path.join(process.cwd(), 'node_modules');
-    if (fs.existsSync(nodeModulesPath)) {
-      const entries = fs.readdirSync(nodeModulesPath, { withFileTypes: true });
-      entries.forEach(entry => {
-        if (entry.isDirectory() && !entry.name.startsWith('.')) {
-          console.log(`Package found: ${entry.name}`);
-        }
-      });
+  stop() {
+    if (this.watcher) {
+      this.watcher.close();
     }
   }
 
-  private generateTree() {
-    const command = [
-      'node --import tsx',
-      path.join(process.cwd(), 'src/tree.ts'),
-      `--output ${this.options.outputFile}`,
-      `--exclude ${this.options.excludedFolders.join(' ')}`,
-      this.options.maxDepth ? `--depth ${this.options.maxDepth}` : ''
-    ].join(' ');
+  private setupWatcher() {
+    try {
+      this.watcher = watch('.', {
+        ignored: [
+          // Ignore anything deeper than specified depth in excluded folders
+          ...this.options.excludedFolders.map(folder => 
+            `**/${folder}/${'*/'.repeat(this.options.excludedFoldersDepth ?? 1)}*`
+          ),
+          this.options.outputFile,
+        ],
+        persistent: true,
+        ignoreInitial: true,
+        depth: Math.min(this.options.maxDepth ?? 99, 20),
+        ignorePermissionErrors: true,
+        awaitWriteFinish: {
+          stabilityThreshold: 2000,
+          pollInterval: 100
+        }
+      });
 
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error: ${error}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Stderr: ${stderr}`);
-        return;
-      }
-      console.log('Repository structure updated!');
-    });
+      this.watcher
+        .on('all', this.debounceUpdate.bind(this))
+        .on('error', error => {
+          console.error('Watch error:', error);
+        });
+
+    } catch (error) {
+      console.error('Failed to initialize watcher:', error);
+      process.exit(1);
+    }
   }
 
-  private debounceGenerateTree() {
+  private setupCleanup() {
+    const cleanup = async () => {
+      this.isShuttingDown = true;
+      if (this.updateTimeout) {
+        clearTimeout(this.updateTimeout);
+      }
+      if (this.watcher) {
+        await this.watcher.close();
+      }
+      process.exit(0);
+    };
+
+    process.on('SIGINT', cleanup);
+    process.on('SIGTERM', cleanup);
+    process.on('exit', cleanup);
+  }
+
+  private debounceUpdate() {
+    if (this.isShuttingDown) return;
+    
     if (this.updateTimeout) {
       clearTimeout(this.updateTimeout);
     }
-    
+
     this.updateTimeout = setTimeout(() => {
       this.generateTree();
-      this.updateTimeout = null;
-    }, 1000); // Wait 1 second after last change before updating
+    }, 300);
   }
 
-  private setupWatchers() {
-    this.watcher
-      .on('add', (path: string) => {
-        // Only log if not in node_modules
-        if (!path.includes('node_modules/')) {
-          console.log(`File ${path} has been added`);
-        }
-        this.debounceGenerateTree();
-      })
-      .on('unlink', (path: string) => {
-        if (!path.includes('node_modules/')) {
-          console.log(`File ${path} has been removed`);
-        }
-        this.debounceGenerateTree();
-      })
-      .on('addDir', (path: string) => {
-        if (!path.includes('node_modules/')) {
-          console.log(`Directory ${path} has been added`);
-        }
-        this.debounceGenerateTree();
-      })
-      .on('unlinkDir', (path: string)  => {
-        if (!path.includes('node_modules/')) {
-          console.log(`Directory ${path} has been removed`);
-        }
-        this.debounceGenerateTree();
-      })
-      .on('ready', () => {
-        console.log('Initial scan complete. Watching for changes...');
-        this.generateTree(); // Generate initial tree
+  private async generateTree() {
+    try {
+      const tree = generateTree({
+        outputFile: this.options.outputFile,
+        excludedFolders: this.options.excludedFolders,
+        maxDepth: this.options.maxDepth ?? Infinity,
+        excludedFoldersDepth: this.options.excludedFoldersDepth ?? 1
       });
-  }
-
-  public stop() {
-    this.watcher.close();
+      console.log('Repository structure updated!');
+    } catch (error) {
+      console.error('Error generating tree:', error);
+    }
   }
 }
 

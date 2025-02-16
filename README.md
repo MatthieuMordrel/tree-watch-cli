@@ -27,6 +27,7 @@ This will start watching your directory and generate a `tree.txt` file with your
 - `-o, --output <file>` - Specify the output file name (default: "tree.txt")
 - `-e, --exclude <folders...>` - Specify folders to exclude (default: ["node_modules", ".git"])
 - `-d, --max-depth <number>` - Maximum depth to traverse in the directory tree (default: 99)
+- `-ed, --excluded-depth <number>` - Maximum depth to traverse in the excluded folders (default: 1)
 
 ### Examples
 
@@ -42,6 +43,9 @@ tree-watch-cli -d 3
 
 # Combine options
 tree-watch-cli -o custom-tree.txt -e node_modules dist -d 2
+
+# Combine options with excluded depth
+tree-watch-cli -o custom-tree.txt -e node_modules dist -d 2 -ed 1
 ```
 
 ## Features

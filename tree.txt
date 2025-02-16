@@ -1,37 +1,29 @@
 .
 ├── .git
-│   ├── COMMIT_EDITMSG
-│   ├── config
-│   ├── description
-│   ├── HEAD
-│   ├── hooks
-│   ├── index
-│   ├── info
-│   ├── logs
-│   ├── objects
-│   └── refs
+│   └── .git
 ├── .gitignore
 ├── dist
 │   ├── cli.d.ts
+│   ├── cli.d.ts.map
 │   ├── cli.js
 │   ├── tree.d.ts
+│   ├── tree.d.ts.map
 │   ├── tree.js
 │   ├── watch.d.ts
+│   ├── watch.d.ts.map
 │   └── watch.js
 ├── node_modules
-│   ├── .bin
-│   ├── .modules.yaml
-│   ├── .pnpm
-│   ├── @types
-│   ├── chokidar
-│   ├── commander
-│   ├── tsx
-│   └── typescript
+│   └── node_modules
 ├── package.json
 ├── README.md
 ├── src
 │   ├── cli.ts
 │   ├── tree.ts
+│   ├── types.ts
 │   └── watch.ts
+├── test-tree-watch-cli
+│   ├── node_modules
+│   │   └── node_modules
+│   └── package.json
 ├── tree.txt
 └── tsconfig.json
