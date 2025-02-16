@@ -4,7 +4,7 @@
   "description": "A CLI tool to watch and generate directory tree structure",
   "type": "module",
   "bin": {
-    "tree-watch": "./dist/cli.js"
+    "tree-watch": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -13,8 +13,7 @@
   },
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "keywords": [
     "tree",
@@ -34,8 +33,9 @@
     "typescript": "~5.6.3"
   },
   "main": "./dist/cli.js",
+  "types": "./dist/cli.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rdrel/tree-watch-cli"
+    "url": "git+https://github.com/rdrel/tree-watch-cli.git"
   }
 }
