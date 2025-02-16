@@ -39,7 +39,7 @@
   "types": "./dist/cli.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rdrel/tree-watch-cli.git"
+    "url": "git+https://github.com/MatthieuMordrel/tree-watch-cli.git"
   },
   "engines": {
     "node": ">=23.0.0"
@@ -50,9 +50,9 @@
       "import": "./dist/cli.js"
     }
   },
-  "homepage": "https://github.com/rdrel/tree-watch-cli#readme",
+  "homepage": "https://github.com/MatthieuMordrel/tree-watch-cli#readme",
   "bugs": {
-    "url": "https://github.com/rdrel/tree-watch-cli/issues"
+    "url": "https://github.com/MatthieuMordrel/tree-watch-cli/issues"
   },
   "publishConfig": {
     "access": "public"
