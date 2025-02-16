@@ -17,7 +17,7 @@ yarn global add tree-watch-cli
 In your project directory, simply run:
 
 ```bash
-tree-watch
+tree-watch-cli
 ```
 
 This will start watching your directory and generate a `tree.txt` file with your project structure. The file will be automatically updated whenever you add, remove, or modify files and folders.
@@ -25,23 +25,23 @@ This will start watching your directory and generate a `tree.txt` file with your
 ### Options
 
 - `-o, --output <file>` - Specify the output file name (default: "tree.txt")
-- `-e, --exclude <folders...>` - Specify folders to exclude (default: ["node_modules"])
+- `-e, --exclude <folders...>` - Specify folders to exclude (default: ["node_modules", ".git"])
 - `-d, --max-depth <number>` - Maximum depth to traverse in the directory tree (default: 99)
 
 ### Examples
 
 ```bash
 # Use a different output file
-tree-watch -o my-tree.txt
+tree-watch-cli -o my-tree.txt
 
 # Exclude multiple folders
-tree-watch -e node_modules dist .git
+tree-watch-cli -e node_modules dist .git
 
 # Limit directory depth
-tree-watch -d 3
+tree-watch-cli -d 3
 
 # Combine options
-tree-watch -o custom-tree.txt -e node_modules dist -d 2
+tree-watch-cli -o custom-tree.txt -e node_modules dist -d 2
 ```
 
 ## Features
@@ -52,6 +52,48 @@ tree-watch -o custom-tree.txt -e node_modules dist -d 2
 - Limit directory traversal depth
 - Handles large directory structures
 - Graceful process termination
+
+## Expected output (tree.txt): tree-watch-cli
+
+```
+.
+├── .git
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── description
+│   ├── HEAD
+│   ├── hooks
+│   ├── index
+│   ├── info
+│   ├── logs
+│   ├── objects
+│   └── refs
+├── .gitignore
+├── dist
+│   ├── cli.d.ts
+│   ├── cli.js
+│   ├── tree.d.ts
+│   ├── tree.js
+│   ├── watch.d.ts
+│   └── watch.js
+├── node_modules
+│   ├── .bin
+│   ├── .modules.yaml
+│   ├── .pnpm
+│   ├── @types
+│   ├── chokidar
+│   ├── commander
+│   ├── tsx
+│   └── typescript
+├── package.json
+├── README.md
+├── src
+│   ├── cli.ts
+│   ├── tree.ts
+│   └── watch.ts
+├── tree.txt
+└── tsconfig.json
+```
 
 ## License
 

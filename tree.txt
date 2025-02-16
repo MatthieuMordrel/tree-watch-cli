@@ -1,0 +1,37 @@
+.
+├── .git
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── description
+│   ├── HEAD
+│   ├── hooks
+│   ├── index
+│   ├── info
+│   ├── logs
+│   ├── objects
+│   └── refs
+├── .gitignore
+├── dist
+│   ├── cli.d.ts
+│   ├── cli.js
+│   ├── tree.d.ts
+│   ├── tree.js
+│   ├── watch.d.ts
+│   └── watch.js
+├── node_modules
+│   ├── .bin
+│   ├── .modules.yaml
+│   ├── .pnpm
+│   ├── @types
+│   ├── chokidar
+│   ├── commander
+│   ├── tsx
+│   └── typescript
+├── package.json
+├── README.md
+├── src
+│   ├── cli.ts
+│   ├── tree.ts
+│   └── watch.ts
+├── tree.txt
+└── tsconfig.json

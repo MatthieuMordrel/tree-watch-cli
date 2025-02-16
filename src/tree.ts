@@ -50,20 +50,77 @@ type FileNode = {
 function listFiles(dir: string, depth: number, maxDepth: number, excludedFolders: string[]): FileNode[] {
   if (depth > maxDepth) return [];
 
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  return entries
-    .filter(entry => !excludedFolders.includes(entry.name))
-    .map((entry) => {
-      const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        return {
-          name: entry.name,
-          children: listFiles(fullPath, depth + 1, maxDepth, excludedFolders),
-        };
-      } else {
-        return { name: entry.name };
+  const items = fs.readdirSync(dir, { withFileTypes: true });
+  const result: FileNode[] = [];
+
+  for (const item of items) {
+    const fullPath = path.join(dir, item.name);
+    
+    // Skip excluded folders unless it's node_modules or .git
+    if (excludedFolders.includes(item.name) && !['node_modules', '.git'].includes(item.name)) {
+      continue;
+    }
+
+    if (item.isDirectory()) {
+      // Special handling for node_modules
+      if (item.name === 'node_modules') {
+        // For node_modules, get ALL top-level entries without filtering
+        const nodeModulesContent = fs.readdirSync(fullPath, { withFileTypes: true })
+          .map(entry => {
+            if (entry.isDirectory() && entry.name.startsWith('@')) {
+              // Handle scoped packages by going one level deeper
+              const scopedPath = path.join(fullPath, entry.name);
+              const scopedPackages = fs.readdirSync(scopedPath, { withFileTypes: true })
+                .filter(pkg => pkg.isDirectory())
+                .map(pkg => ({ name: pkg.name }));
+              
+              return {
+                name: entry.name,
+                children: scopedPackages
+              };
+            }
+            // Include all files and directories at top level
+            return { name: entry.name };
+          });
+        
+        if (nodeModulesContent.length > 0) {
+          result.push({
+            name: item.name,
+            children: nodeModulesContent
+          });
+        }
+        continue;
       }
-    });
+
+      // Special handling for .git - only show the directory and its direct children
+      if (item.name === '.git') {
+        const gitContent = fs.readdirSync(fullPath, { withFileTypes: true })
+          .map(entry => ({ name: entry.name }));
+        
+        if (gitContent.length > 0) {
+          result.push({
+            name: item.name,
+            children: gitContent
+          });
+        } else {
+          result.push({ name: item.name });
+        }
+        continue;
+      }
+
+      const children = listFiles(fullPath, depth + 1, maxDepth, excludedFolders);
+      if (children.length > 0) {
+        result.push({
+          name: item.name,
+          children
+        });
+      }
+    } else {
+      result.push({ name: item.name });
+    }
+  }
+
+  return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
