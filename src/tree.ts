@@ -9,7 +9,6 @@ const options: TreeOptions = {
   outputFile: 'tree.txt',
   excludedFolders: ['node_modules', '.git'],
   maxDepth: Infinity,
-  excludedFoldersDepth: 1
 };
 
 for (let i = 0; i < args.length; i++) {
@@ -26,9 +25,6 @@ for (let i = 0; i < args.length; i++) {
     case '--depth':
       options.maxDepth = parseInt(args[++i], 10);
       break;
-    case '--excluded-depth':
-      options.excludedFoldersDepth = parseInt(args[++i], 10);
-      break;
   }
 }
 
@@ -37,33 +33,18 @@ for (let i = 0; i < args.length; i++) {
  * @param dir - The directory to list files from.
  * @param depth - The current depth of the directory.
  * @param maxDepth - The maximum depth to traverse.
- * @param options - The tree options.
+ * @param excludedFolders - The list of excluded folders.
  * @returns An array of objects representing the files and directories.
  */
-function listFiles(dir: string, depth: number, maxDepth: number, options: TreeOptions): FileNode[] {
+function listFiles(dir: string, depth: number, maxDepth: number, excludedFolders: string[]): FileNode[] {
   if (depth > maxDepth) return [];
 
   const result: FileNode[] = [];
   const dirName = path.basename(dir);
 
-  // Check exclusion early to avoid unnecessary work
-  if (depth > 0 && options.excludedFolders.includes(dirName)) {
-    // If we're at max depth for excluded folders, just return the name
-    if (depth >= options.excludedFoldersDepth) {
-      return [{ name: dirName }];
-    }
-    // Otherwise just get immediate children without recursing
-    try {
-      const children = fs.readdirSync(dir, { withFileTypes: true })
-        .map(entry => ({ name: entry.name }));
-      return [{
-        name: dirName,
-        children: children.length > 0 ? children : undefined
-      }];
-    } catch (error) {
-      console.warn(`Error reading excluded directory ${dir}:`, error);
-      return [{ name: dirName }];
-    }
+  // Skip excluded directories entirely
+  if (excludedFolders.includes(dirName)) {
+    return [];
   }
 
   try {
@@ -88,7 +69,7 @@ function listFiles(dir: string, depth: number, maxDepth: number, options: TreeOp
       }
 
       if (item.isDirectory()) {
-        const children = listFiles(fullPath, depth + 1, maxDepth, options);
+        const children = listFiles(fullPath, depth + 1, maxDepth, excludedFolders);
         if (children.length > 0) {
           result.push({
             name: item.name,
@@ -127,7 +108,7 @@ function printTree(nodes: FileNode[], prefix = "", output: string[] = []): strin
 
 // Export the main function for direct use
 export function generateTree(options: TreeOptions) {
-  const tree = listFiles(process.cwd(), 0, options.maxDepth, options);
+  const tree = listFiles(process.cwd(), 0, options.maxDepth, options.excludedFolders);
   const treeOutput = [".", ...printTree(tree)];
   fs.writeFileSync(options.outputFile, treeOutput.join("\n"), "utf-8");
   return tree;

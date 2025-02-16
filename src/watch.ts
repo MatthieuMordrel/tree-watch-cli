@@ -1,5 +1,4 @@
 import { FSWatcher, watch } from 'chokidar';
-import { exec } from 'child_process';
 import path from 'path';
 import { TreeWatcherOptions } from './types.ts';
 import { generateTree } from './tree.ts';
@@ -26,10 +25,8 @@ export class TreeWatcher {
     try {
       this.watcher = watch('.', {
         ignored: [
-          // Ignore anything deeper than specified depth in excluded folders
-          ...this.options.excludedFolders.map(folder => 
-            `**/${folder}/${'*/'.repeat(this.options.excludedFoldersDepth ?? 1)}*`
-          ),
+          // Completely ignore excluded folders
+          ...this.options.excludedFolders.map(folder => `**/${folder}/**`),
           this.options.outputFile,
         ],
         persistent: true,
@@ -85,11 +82,10 @@ export class TreeWatcher {
 
   private async generateTree() {
     try {
-      const tree = generateTree({
+      generateTree({
         outputFile: this.options.outputFile,
         excludedFolders: this.options.excludedFolders,
-        maxDepth: this.options.maxDepth ?? Infinity,
-        excludedFoldersDepth: this.options.excludedFoldersDepth ?? 1
+        maxDepth: this.options.maxDepth ?? Infinity
       });
       console.log('Repository structure updated!');
     } catch (error) {

@@ -1,6 +1,4 @@
 .
-├── .git
-│   └── .git
 ├── .gitignore
 ├── dist
 │   ├── cli.d.ts
@@ -12,8 +10,6 @@
 │   ├── watch.d.ts
 │   ├── watch.d.ts.map
 │   └── watch.js
-├── node_modules
-│   └── node_modules
 ├── package.json
 ├── README.md
 ├── src
@@ -22,8 +18,6 @@
 │   ├── types.ts
 │   └── watch.ts
 ├── test-tree-watch-cli
-│   ├── node_modules
-│   │   └── node_modules
 │   └── package.json
 ├── tree.txt
 └── tsconfig.json

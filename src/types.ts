@@ -2,7 +2,6 @@ export interface TreeOptions {
   outputFile: string;
   excludedFolders: string[];
   maxDepth: number;
-  excludedFoldersDepth: number;
 }
 
 export type FileNode = {
@@ -16,5 +15,4 @@ export interface TreeWatcherOptions {
   outputFile: string;
   excludedFolders: string[];
   maxDepth?: number;
-  excludedFoldersDepth?: number;
 } 

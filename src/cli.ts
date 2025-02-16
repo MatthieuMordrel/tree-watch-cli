@@ -14,13 +14,11 @@ program
   .option('-o, --output <file>', 'output file name', 'tree.txt')
   .option('-e, --exclude <folders...>', 'folders to exclude', ['node_modules', '.git'])
   .option('-d, --max-depth <number>', 'maximum depth to traverse')
-  .option('--excluded-depth <number>', 'depth for excluded folders', '1')
   .action((options) => {
     const treeOptions: TreeOptions = {
       outputFile: options.output,
       excludedFolders: options.exclude,
-      maxDepth: options.maxDepth ? parseInt(options.maxDepth, 10) : Infinity,
-      excludedFoldersDepth: parseInt(options.excludedDepth, 10)
+      maxDepth: options.maxDepth ? parseInt(options.maxDepth, 10) : Infinity
     };
 
     // Generate initial tree
