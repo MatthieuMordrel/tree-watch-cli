@@ -42,7 +42,7 @@
     "url": "git+https://github.com/MatthieuMordrel/tree-watch-cli.git"
   },
   "engines": {
-    "node": ">=23.0.0"
+    "node": ">=23.8.0"
   },
   "exports": {
     ".": {
