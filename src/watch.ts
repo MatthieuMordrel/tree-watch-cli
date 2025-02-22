@@ -1,7 +1,7 @@
 import { FSWatcher, watch } from 'chokidar';
-import path from 'path';
 import { TreeWatcherOptions } from './types.ts';
 import { generateTree } from './tree.ts';
+import path from 'path';
 
 export class TreeWatcher {
   private watcher: FSWatcher | null = null;
@@ -11,24 +11,47 @@ export class TreeWatcher {
 
   constructor(options: TreeWatcherOptions) {
     this.options = options;
+    console.log("OutputFile:",this.options.outputFile);
+    console.log("Excluded Folders:", this.options.excludedFolders);
     this.setupWatcher();
     this.setupCleanup();
   }
 
+  /**
+   * Stops the file watcher.
+   */
   stop() {
     if (this.watcher) {
       this.watcher.close();
     }
   }
 
+  /**
+   * Sets up the file watcher.
+   * @private
+   */
   private setupWatcher() {
     try {
       this.watcher = watch('.', {
-        ignored: [
-          // Completely ignore excluded folders
-          ...this.options.excludedFolders.map(folder => `**/${folder}/**`),
-          this.options.outputFile,
-        ],
+        ignored: (filePath: string) => {
+          // console.log("filePath:", filePath)
+          if (filePath === this.options.outputFile) {
+            console.log("Ignoring output file:", filePath)
+            return true;
+          }
+
+          for (const excludedFolder of this.options.excludedFolders) {
+            if (
+              filePath.startsWith(excludedFolder + path.sep) ||
+              filePath === excludedFolder
+            ) {
+              console.log("Ignoring excluded folder:", filePath)
+              return true;
+            }
+          }
+          // console.log("Not Ignoring:", filePath)
+          return false;
+        },
         persistent: true,
         ignoreInitial: true,
         depth: Math.min(this.options.maxDepth ?? 99, 20),
@@ -40,7 +63,7 @@ export class TreeWatcher {
       });
 
       this.watcher
-        .on('all', this.debounceUpdate.bind(this))
+        .on('all', (event, path) => this.debounceUpdate(event, path))
         .on('error', error => {
           console.error('Watch error:', error);
         });
@@ -51,6 +74,10 @@ export class TreeWatcher {
     }
   }
 
+  /**
+   * Sets up cleanup handlers for process termination signals.
+   * @private
+   */
   private setupCleanup() {
     const cleanup = async () => {
       this.isShuttingDown = true;
@@ -68,9 +95,15 @@ export class TreeWatcher {
     process.on('exit', cleanup);
   }
 
-  private debounceUpdate() {
+  /**
+   * Debounces the update of the repository structure to avoid multiple updates in quick succession.
+   * @private
+   */
+  private debounceUpdate(event: string, path: string) {
     if (this.isShuttingDown) return;
     
+    console.log(`[${new Date().toLocaleTimeString()}] Event detected: ${event} on ${path}`);
+
     if (this.updateTimeout) {
       clearTimeout(this.updateTimeout);
     }
@@ -80,6 +113,10 @@ export class TreeWatcher {
     }, 300);
   }
 
+  /**
+   * Generates the repository structure tree and logs a success message.
+   * @private
+   */
   private async generateTree() {
     try {
       generateTree({
@@ -87,7 +124,7 @@ export class TreeWatcher {
         excludedFolders: this.options.excludedFolders,
         maxDepth: this.options.maxDepth ?? Infinity
       });
-      console.log('Repository structure updated!');
+      console.log(`[${new Date().toLocaleTimeString()}] Repository structure updated!`);
     } catch (error) {
       console.error('Error generating tree:', error);
     }

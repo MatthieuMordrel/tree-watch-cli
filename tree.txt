@@ -17,7 +17,5 @@
 │   ├── tree.ts
 │   ├── types.ts
 │   └── watch.ts
-├── test-tree-watch-cli
-│   └── package.json
 ├── tree.txt
 └── tsconfig.json

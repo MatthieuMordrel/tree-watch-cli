@@ -5,6 +5,7 @@ import { TreeWatcher } from './watch.ts';
 import { generateTree } from './tree.ts';
 import { TreeOptions } from './types.ts';
 
+// Create a new command instance
 const program = new Command();
 
 program
@@ -15,22 +16,25 @@ program
   .option('-e, --exclude <folders...>', 'folders to exclude', ['node_modules', '.git'])
   .option('-d, --max-depth <number>', 'maximum depth to traverse')
   .action((options) => {
+    // Create TreeOptions object from command line options
     const treeOptions: TreeOptions = {
       outputFile: options.output,
       excludedFolders: options.exclude,
       maxDepth: options.maxDepth ? parseInt(options.maxDepth, 10) : Infinity
     };
 
-    // Generate initial tree
+    // Generate initial tree structure
     generateTree(treeOptions);
 
-    // Start watching for changes
+    // Start watching for changes in the directory
     const watcher = new TreeWatcher(treeOptions);
     
+    // Handle SIGINT signal to gracefully stop the watcher
     process.on('SIGINT', () => {
       watcher.stop();
       process.exit(0);
     });
   });
 
+// Parse command line arguments
 program.parse(); 

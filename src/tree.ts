@@ -2,32 +2,6 @@ import fs from "fs";
 import path from "path";
 import { TreeOptions, FileNode } from "./types.ts";
 
-// Parse command line arguments
-const args = process.argv.slice(2);
-// Default options
-const options: TreeOptions = {
-  outputFile: 'tree.txt',
-  excludedFolders: ['node_modules', '.git'],
-  maxDepth: Infinity,
-};
-
-for (let i = 0; i < args.length; i++) {
-  switch (args[i]) {
-    case '--output':
-      options.outputFile = args[++i];
-      break;
-    case '--exclude':
-      options.excludedFolders = [];
-      while (args[i + 1] && !args[i + 1].startsWith('--')) {
-        options.excludedFolders.push(args[++i]);
-      }
-      break;
-    case '--depth':
-      options.maxDepth = parseInt(args[++i], 10);
-      break;
-  }
-}
-
 /**
  * Lists all files and directories in the given directory up to the specified depth.
  * @param dir - The directory to list files from.
@@ -106,7 +80,14 @@ function printTree(nodes: FileNode[], prefix = "", output: string[] = []): strin
   return output;
 }
 
-// Export the main function for direct use
+/**
+ * Generates the tree structure of the current directory and writes it to a file.
+ * @param options - The options for the tree generation.
+ * @param options.outputFile - The file to write the tree structure to.
+ * @param options.excludedFolders - The list of folders to exclude from the tree.
+ * @param options.maxDepth - The maximum depth to traverse.
+ * @returns The generated tree.
+ */
 export function generateTree(options: TreeOptions) {
   const tree = listFiles(process.cwd(), 0, options.maxDepth, options.excludedFolders);
   const treeOutput = [".", ...printTree(tree)];
