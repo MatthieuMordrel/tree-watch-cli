@@ -63,7 +63,10 @@ export class TreeWatcher {
       });
 
       this.watcher
-        .on('all', (event, path) => this.debounceUpdate(event, path))
+        .on('add', (path: string) => this.debounceUpdate('add', path))
+        .on('unlink', (path: string) => this.debounceUpdate('unlink', path))
+        .on('addDir', (path: string) => this.debounceUpdate('addDir', path))
+        .on('unlinkDir', (path: string) => this.debounceUpdate('unlinkDir', path))
         .on('error', error => {
           console.error('Watch error:', error);
         });
@@ -110,7 +113,7 @@ export class TreeWatcher {
 
     this.updateTimeout = setTimeout(() => {
       this.generateTree();
-    }, 300);
+    }, 100);
   }
 
   /**
