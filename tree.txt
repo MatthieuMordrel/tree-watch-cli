@@ -1,5 +1,22 @@
 .
 ├── .gitignore
+├── dist
+│   ├── cli.d.ts
+│   ├── cli.d.ts.map
+│   ├── cli.js
+│   ├── tree.d.ts
+│   ├── tree.d.ts.map
+│   ├── tree.js
+│   ├── tree.test.d.ts
+│   ├── tree.test.d.ts.map
+│   ├── tree.test.js
+│   ├── types.d.ts
+│   ├── types.d.ts.map
+│   ├── types.js
+│   ├── watch.d.ts
+│   ├── watch.d.ts.map
+│   └── watch.js
+├── LICENSE
 ├── package.json
 ├── pnpm-lock.yaml
 ├── README.md

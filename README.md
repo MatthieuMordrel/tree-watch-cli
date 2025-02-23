@@ -1,13 +1,7 @@
 # tree-watch-cli
 
 A command-line tool to automatically generate and update a tree structure of your project directory as files and folders change.
-Useful to provide your updated repository structure to AI tools like Cursor:
-
-• Install library
-• Run `tree-watch-cli` in your project directory  
-• Add a .cursor/rules directory
-• Use @tree.txt within your project rule
-• All your next prompts will have the latest project structure
+Useful to provide your updated repository structure to AI tools like Cursor.
 
 ## Installation
 
@@ -27,19 +21,29 @@ In your project directory, simply run:
 tree-watch-cli
 ```
 
-This will start watching your directory and generate a `tree.txt` file with your project structure. The file will be automatically updated whenever you add, remove, or modify files and folders.
+Or if you prefer to not install the package globally, you can run:
+
+```bash
+npx tree-watch-cli
+# or
+pnpm dlx tree-watch-cli
+# or
+yarn dlx tree-watch-cli
+```
+
+This will start watching your directory and generate a `tree.txt` file with your project structure. The file will be automatically updated whenever you add or remove files and folders.
 
 ### Options
 
-- `-o, --output <file>` - Specify the output file name (default: "tree.txt")
-- `-e, --exclude <folders...>` - Specify folders to exclude (default: ["node_modules", ".git"]). Only folder can be specified. To avoid exclusion, use any arguments.
-- `-d, --max-depth <number>` - Maximum depth to traverse in the directory tree (default: 99)
+- `-o, --output <file>`: Specify the output file name (default: "tree.txt")
+- `-e, --exclude <folders...>`: Specify folders to exclude (default: ["node_modules", ".git"]). Only folder can be specified. To avoid exclusion, use any arguments.
+- `-d, --max-depth <number>`: Maximum depth to traverse in the directory tree (default: 99)
 
 ### Examples
 
 ```bash
 # Use a different output file
-tree-watch-cli -o my-tree.txt
+tree-watch-cli -o repo-structure.txt
 
 # Exclude multiple folders
 tree-watch-cli -e node_modules dist .git
@@ -60,28 +64,17 @@ tree-watch-cli -o custom-tree.txt -e node_modules dist -d 2
 - Handles large directory structures
 - Graceful process termination
 
-## Expected output (tree.txt): tree-watch-cli
+## Usage with Cursor
 
-```
-.
+• `npm install -g tree-watch-cli`
 
-├── .gitignore
-├── dist
-│   ├── cli.d.ts
-│   ├── cli.js
-│   ├── tree.d.ts
-│   ├── tree.js
-│   ├── watch.d.ts
-│   └── watch.js
-├── package.json
-├── README.md
-├── src
-│   ├── cli.ts
-│   ├── tree.ts
-│   └── watch.ts
-├── tree.txt
-└── tsconfig.json
-```
+• `tree-watch-cli` in your project directory
+
+• Add a `.cursor/rules` directory
+
+• Use `@tree.txt` within your project rule
+
+• All your next prompts will be provided with your latest project structure
 
 ## License
 
