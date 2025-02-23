@@ -3,6 +3,26 @@
 A command-line tool to automatically generate and update a tree structure of your project directory as files and folders change.
 Useful to provide your updated repository structure to AI tools like Cursor.
 
+## Expected Result
+
+```
+.
+├── .gitignore
+├── LICENSE
+├── package.json
+├── pnpm-lock.yaml
+├── README.md
+├── src
+│   ├── cli.ts
+│   ├── tree.test.ts
+│   ├── tree.ts
+│   ├── types.ts
+│   └── watch.ts
+├── tests.txt
+├── tree.txt
+└── tsconfig.json
+```
+
 ## Installation
 
 ```bash
@@ -75,6 +95,11 @@ tree-watch-cli -o custom-tree.txt -e node_modules dist -d 2
 • Use `@tree.txt` within your project rule
 
 • All your next prompts will be provided with your latest project structure
+
+## To be added
+
+- Max depth for excluded folders
+- Directory name to output tree
 
 ## License
 
