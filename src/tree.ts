@@ -10,7 +10,7 @@ import { TreeOptions, FileNode } from "./types.ts";
  * @param excludedFolders - The list of excluded folders.
  * @returns An array of objects representing the files and directories.
  */
-function listFiles(dir: string, depth: number, maxDepth: number, excludedFolders: string[]): FileNode[] {
+export function listFiles(dir: string, depth: number, maxDepth: number, excludedFolders: string[]): FileNode[] {
   if (depth > maxDepth) return [];
 
   const result: FileNode[] = [];
@@ -69,7 +69,7 @@ function listFiles(dir: string, depth: number, maxDepth: number, excludedFolders
  * @param output - The output array to store the tree structure.
  * @returns An array of strings representing the tree structure.
  */
-function printTree(nodes: FileNode[], prefix = "", output: string[] = []): string[] {
+export function printTree(nodes: FileNode[], prefix = "", output: string[] = []): string[] {
   nodes.forEach((node, index) => {
     const isLast = index === nodes.length - 1;
     output.push(`${prefix}${isLast ? "└──" : "├──"} ${node.name}`);
