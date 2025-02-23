@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { TreeOptions, FileNode } from "./types.ts";
+import { TreeOptions, FileNode } from "./types.js";
 
 /**
  * Lists all files and directories in the given directory up to the specified depth.

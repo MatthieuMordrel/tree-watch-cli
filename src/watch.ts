@@ -1,6 +1,6 @@
 import { FSWatcher, watch } from 'chokidar';
-import { TreeWatcherOptions } from './types.ts';
-import { generateTree } from './tree.ts';
+import { TreeWatcherOptions } from './types.js';
+import { generateTree } from './tree.js'; 
 import path from 'path';
 
 export class TreeWatcher {
