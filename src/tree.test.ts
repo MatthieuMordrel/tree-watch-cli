@@ -1,4 +1,4 @@
-import { listFiles } from './tree.ts';
+import { listFiles } from './tree.js';
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
