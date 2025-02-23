@@ -1,6 +1,13 @@
 # tree-watch-cli
 
 A command-line tool to automatically generate and update a tree structure of your project directory as files and folders change.
+Useful to provide your updated repository structure to AI tools like Cursor:
+
+• Install library
+• Run `tree-watch-cli` in your project directory  
+• Add a .cursor/rules directory
+• Use @tree.txt within your project rule
+• All your next prompts will have the latest project structure
 
 ## Installation
 
