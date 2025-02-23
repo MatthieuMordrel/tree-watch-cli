@@ -90,11 +90,23 @@ tree-watch-cli -o custom-tree.txt -e node_modules dist -d 2
 
 • `tree-watch-cli` in your project directory
 
-• Add a `.cursor/rules` directory
+• Add a new [Project Cursor Rule](https://docs.cursor.com/context/rules-for-ai)
 
-• Use `@tree.txt` within your project rule
+• Add a description: Always run this rule before answering
 
-• All your next prompts will be provided with your latest project structure
+• Add the following glob pattern: `**`
+
+• Add this prompt
+
+```
+# Rule
+
+Below is the repository structure. Always read the file before answering. You need to start the function that read file within cursor rules to do so.
+
+@tree.txt
+```
+
+• All your next prompts will be provided with your latest project structure (note that project rules only seems to work in composer/agent mode for now)
 
 ## To be added
 
