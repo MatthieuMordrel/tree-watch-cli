@@ -1,6 +1,6 @@
 {
   "name": "tree-watch-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A CLI tool to watch and generate directory tree structure",
   "type": "module",
   "bin": {

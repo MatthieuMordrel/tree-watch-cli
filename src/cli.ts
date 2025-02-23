@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name('tree-watch-cli')
   .description('Watch directory and generate tree structure')
-  .version('1.0.0')
+  .version('1.0.4')
   .option('-o, --output <file>', 'output file name', 'tree.txt')
   .option('-e, --exclude <folders...>', 'folders to exclude', ['node_modules', '.git'])
   .option('-d, --max-depth <number>', 'maximum depth to traverse')
