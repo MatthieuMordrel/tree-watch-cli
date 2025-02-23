@@ -11,8 +11,11 @@ export class TreeWatcher {
 
   constructor(options: TreeWatcherOptions) {
     this.options = options;
-    console.log("OutputFile:",this.options.outputFile);
-    console.log("Excluded Folders:", this.options.excludedFolders);
+    console.log('\nRunning tree-watch-cli with following arguments:');
+    console.log('  • Output File:      ', this.options.outputFile);
+    console.log('  • Excluded Folders: ', this.options.excludedFolders.join(', '));
+    console.log('  • Max Depth:        ', this.options.maxDepth);
+    console.log(); // Empty line after
     this.setupWatcher();
     this.setupCleanup();
   }

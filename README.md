@@ -25,7 +25,7 @@ This will start watching your directory and generate a `tree.txt` file with your
 ### Options
 
 - `-o, --output <file>` - Specify the output file name (default: "tree.txt")
-- `-e, --exclude <folders...>` - Specify folders to exclude (default: ["node_modules", ".git"])
+- `-e, --exclude <folders...>` - Specify folders to exclude (default: ["node_modules", ".git"]). Only folder can be specified. To avoid exclusion, use any arguments.
 - `-d, --max-depth <number>` - Maximum depth to traverse in the directory tree (default: 99)
 
 ### Examples

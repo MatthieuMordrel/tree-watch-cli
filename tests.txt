@@ -1,0 +1,5 @@
+Testing with pnpm:
+
+pnpm start --output report.txt --exclude node_modules --max-depth 2
+
+pnpm start -o report.txt -e node_modules -d 2

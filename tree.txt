@@ -11,11 +11,14 @@
 │   ├── watch.d.ts.map
 │   └── watch.js
 ├── package.json
+├── pnpm-lock.yaml
 ├── README.md
 ├── src
 │   ├── cli.ts
+│   ├── tree.test.ts
 │   ├── tree.ts
 │   ├── types.ts
 │   └── watch.ts
+├── tests.txt
 ├── tree.txt
 └── tsconfig.json
